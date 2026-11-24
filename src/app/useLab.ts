@@ -1,11 +1,12 @@
 import { ref } from "vue";
 import type { Notice } from "@/shared/commands";
-import type { Point } from "@/shared/types";
+import type { CircuitDocument, Point } from "@/shared/types";
 import { usePlacement } from "@/features/catalog";
 import { useCircuit } from "@/features/circuit";
 import { useSimulation } from "@/features/simulation";
 import { useChallenge } from "@/features/challenge";
-import { loadInitial, useWorkspace } from "@/features/workspace";
+import { decodeDocument, loadInitial, useWorkspace } from "@/features/workspace";
+import { useMerge } from "@/features/merge";
 export function useLab() {
   const initial = loadInitial(),
     document = ref(initial.document);
@@ -25,6 +26,34 @@ export function useLab() {
     challenge.reset();
     placement.tool.value = null;
   });
+  const merge = useMerge(document, notify);
+  /** 已解析、等待用户选择"替换还是并入"的外部实验 */
+  const pendingImport = ref<CircuitDocument | null>(null);
+  function requestImport(text: string) {
+    try {
+      pendingImport.value = decodeDocument(text);
+    } catch (error) {
+      notify({
+        tone: "error",
+        message: `导入失败：${error instanceof Error ? error.message : "文件无法读取"}；当前实验已保留`,
+      });
+    }
+  }
+  function importReplace() {
+    if (!pendingImport.value) return;
+    workspace.replace(pendingImport.value);
+    pendingImport.value = null;
+    notify({ tone: "success", message: "导入成功，实验已恢复" });
+  }
+  function importMerge() {
+    if (!pendingImport.value) return;
+    merge.open(pendingImport.value);
+    pendingImport.value = null;
+  }
+  function importDismiss() {
+    pendingImport.value = null;
+    notify({ tone: "info", message: "已取消导入，当前实验保持不变" });
+  }
   function place(point: Point) {
     if (!placement.tool.value) return;
     if (document.value.nodes.length >= 120) {
@@ -74,6 +103,12 @@ export function useLab() {
     simulation,
     challenge,
     workspace,
+    merge,
+    pendingImport,
+    requestImport,
+    importReplace,
+    importMerge,
+    importDismiss,
     place,
     move,
     cancel,

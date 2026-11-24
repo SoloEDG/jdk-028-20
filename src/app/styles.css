@@ -793,6 +793,227 @@ small {
   font-size: 17px;
   fill: #8196a4;
 }
+.merge-overlay {
+  position: fixed;
+  inset: 0;
+  background: #18314299;
+  display: grid;
+  place-items: center;
+  z-index: 20;
+  padding: 24px;
+}
+.merge-wizard {
+  background: var(--paper);
+  border-radius: 10px;
+  width: min(860px, 100%);
+  max-height: calc(100vh - 60px);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 18px 50px #0c1f2b66;
+  border: 1px solid #c3d1db;
+}
+.merge-wizard.import-choice {
+  width: min(560px, 100%);
+}
+.merge-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 24px 14px;
+  border-bottom: 1px solid var(--line);
+}
+.merge-header h2 {
+  margin: 0;
+  font-size: 18px;
+}
+.merge-header p {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: #6d8594;
+}
+.merge-close {
+  border: 0;
+  background: transparent;
+  font-size: 16px;
+  padding: 4px 8px;
+}
+.merge-body {
+  overflow: auto;
+  padding: 8px 24px 22px;
+}
+.merge-section {
+  border-bottom: 1px solid #e3eaf0;
+  padding: 14px 0;
+}
+.merge-section:last-child {
+  border-bottom: 0;
+}
+.merge-section h3 {
+  font-size: 13px;
+  margin: 0 0 12px;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.merge-section h3 small {
+  color: #7b929e;
+  font-weight: 400;
+}
+.merge-section h4 {
+  font-size: 11px;
+  margin: 14px 0 6px;
+  color: #547081;
+}
+.merge-section ul {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 11px;
+  line-height: 1.9;
+  color: #41586a;
+}
+.merge-section p {
+  font-size: 11px;
+  line-height: 1.8;
+  color: #547081;
+  margin: 6px 0;
+}
+.merge-select-all {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  font-size: 11px;
+  color: #6d8594;
+}
+.merge-select-all button {
+  font-size: 10px;
+  padding: 3px 9px;
+}
+.merge-check-list {
+  list-style: none;
+  padding: 0 !important;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 6px;
+}
+.merge-check-list label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  background: #fff;
+  border: 1px solid #dbe4ea;
+  border-radius: 6px;
+  padding: 6px 8px;
+  cursor: pointer;
+}
+.merge-check-list small {
+  color: #8a9eaa;
+  margin-left: auto;
+  font-family: Menlo, monospace;
+  font-size: 9px;
+}
+.merge-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+}
+.merge-table th {
+  text-align: left;
+  font-size: 10px;
+  color: #79919f;
+  font-weight: 500;
+  padding: 4px 8px 4px 0;
+}
+.merge-table td {
+  padding: 5px 8px 5px 0;
+  vertical-align: middle;
+}
+.merge-table select {
+  font-size: 11px;
+  padding: 5px 6px;
+  max-width: 220px;
+}
+.merge-table .warn,
+.merge-section h3 .warn {
+  color: #b85423;
+}
+.merge-section h3 .ok {
+  color: var(--teal);
+}
+.merge-costs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 8px;
+}
+.merge-costs label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 11px;
+  background: #fff;
+  border: 1px solid #dbe4ea;
+  border-radius: 6px;
+  padding: 6px 9px;
+}
+.merge-costs input {
+  width: 52px;
+  padding: 4px 6px;
+  font-size: 11px;
+}
+.merge-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+.merge-error {
+  font-size: 11px;
+  line-height: 1.8;
+  color: #b85423;
+  background: #fff3eb;
+  padding: 10px 12px;
+  border-radius: 5px;
+  margin: 12px 0 0;
+}
+.merge-plan-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 11px;
+  color: #547081;
+  margin-bottom: 6px;
+}
+.merge-plan-nav button {
+  font-size: 10px;
+  padding: 4px 9px;
+}
+.merge-plan-summary {
+  font-size: 12px !important;
+}
+.merge-plan-summary b {
+  color: #98420b;
+}
+.merge-preview-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 26px;
+}
+.merge-note {
+  font-size: 10px;
+  color: #7a909d;
+  line-height: 1.8;
+}
+@media (max-width: 700px) {
+  .merge-preview-grid {
+    grid-template-columns: 1fr;
+  }
+}
 @media (min-width: 1600px) {
   .workbench {
     grid-template-columns: 230px minmax(450px, 1fr) 300px;

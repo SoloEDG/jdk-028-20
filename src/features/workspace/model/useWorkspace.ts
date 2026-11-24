@@ -2,8 +2,7 @@ import { ref, watch, type Ref } from "vue";
 import type { CircuitDocument } from "@/shared/types";
 import type { Notice } from "@/shared/commands";
 import { decodeDocument, encodeDocument } from "../lib/codec";
-import { sampleCircuit, emptyCircuit } from "../lib/seeds";
-export const STORAGE_KEY = "logic-lab-jdk-028-v1";
+import { sampleCircuit, emptyCircuit } from "../lib/seeds";export const STORAGE_KEY = "logic-lab-jdk-028-v1";
 export function loadInitial(): {
   document: CircuitDocument;
   warning: string | null;
@@ -49,18 +48,6 @@ export function useWorkspace(
     replace(emptyCircuit());
     notify({ tone: "info", message: "已新建空白实验" });
   }
-  function importText(text: string) {
-    try {
-      const next = decodeDocument(text);
-      replace(next);
-      notify({ tone: "success", message: "导入成功，实验已恢复" });
-    } catch (error) {
-      notify({
-        tone: "error",
-        message: `导入失败：${error instanceof Error ? error.message : "文件无法读取"}；当前实验已保留`,
-      });
-    }
-  }
   function exportFile() {
     const url = URL.createObjectURL(
       new Blob([encodeDocument(document.value)], { type: "application/json" }),
@@ -72,5 +59,5 @@ export function useWorkspace(
     setTimeout(() => URL.revokeObjectURL(url), 1000);
     notify({ tone: "success", message: "实验文件已导出" });
   }
-  return { status, save, sample, clear, importText, exportFile };
+  return { status, save, replace, sample, clear, exportFile };
 }

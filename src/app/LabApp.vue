@@ -5,6 +5,7 @@ import { CircuitBoard } from "@/features/circuit";
 import { InputRack, SignalMonitor } from "@/features/simulation";
 import { ChallengePanel } from "@/features/challenge";
 import { WorkspaceBar } from "@/features/workspace";
+import { MergeWizard } from "@/features/merge";
 import { useLab } from "./useLab";
 const lab = useLab();
 const { document, notice } = lab;
@@ -18,6 +19,14 @@ const selectedNode = computed(() =>
 );
 function keydown(event: KeyboardEvent) {
   if ((event.target as HTMLElement).closest("input,textarea,select")) return;
+  if (lab.merge.active.value) {
+    if (event.key === "Escape") lab.merge.cancel();
+    return;
+  }
+  if (lab.pendingImport.value) {
+    if (event.key === "Escape") lab.importDismiss();
+    return;
+  }
   if (event.key === "Escape") lab.cancel();
   if (event.key === "Delete" || event.key === "Backspace") {
     event.preventDefault();
@@ -49,7 +58,7 @@ onUnmounted(() => window.removeEventListener("keydown", keydown));
       @clear="lab.workspace.clear"
       @save="lab.workspace.save"
       @export="lab.workspace.exportFile"
-      @import="lab.workspace.importText"
+      @import="lab.requestImport"
       @error="lab.notify({ tone: 'error', message: $event })"
     />
     <main class="workbench">
@@ -145,5 +154,33 @@ onUnmounted(() => window.removeEventListener("keydown", keydown));
         {{ notice.message }}</span
       ><small>LOCAL LAB / 纯前端实验</small>
     </footer>
+    <div
+      v-if="lab.pendingImport.value"
+      class="merge-overlay"
+      @pointerdown.self="lab.importDismiss"
+    >
+      <section class="merge-wizard import-choice" aria-label="导入方式">
+        <header class="merge-header">
+          <div>
+            <h2>导入实验</h2>
+            <p>
+              已读取 <b>{{ lab.pendingImport.value.name }}</b>（{{
+                lab.pendingImport.value.nodes.length
+              }}
+              个元件）。替换整个工作台，还是把其中一部分并入当前电路？
+            </p>
+          </div>
+        </header>
+        <div class="merge-actions">
+          <button class="primary" @click="lab.importMerge">选择局部并入当前电路</button>
+          <button @click="lab.importReplace">替换整个工作台</button>
+          <button @click="lab.importDismiss">取消</button>
+        </div>
+        <p class="merge-note">
+          替换会覆盖当前实验（建议先导出）；并入会在向导中核对后再修改工作台。
+        </p>
+      </section>
+    </div>
+    <MergeWizard v-if="lab.merge.active.value" :merge="lab.merge" />
   </div>
 </template>
